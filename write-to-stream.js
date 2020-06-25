@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
-const kinesis = new AWS.Kinesis({ region: '' });
+const kinesis = new AWS.Kinesis({ region: 'us-west-2' });
 
-const StreamName = '';
+const StreamName = 'toll-records';
 
 (async function () {
   let i = 0;
@@ -12,9 +12,13 @@ const StreamName = '';
     const PartitionKey = getZipcode();
     const Data = Buffer.from(getLicensePlateNumber());
 
-    const params = {};
+    const params = {
+      StreamName,
+      PartitionKey,
+      Data,
+    };
 
-    const result = await kinesis.putRecord().promise();
+    const result = await kinesis.putRecord(params).promise();
     console.log({ result });
   }
 })();
